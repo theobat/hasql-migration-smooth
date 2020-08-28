@@ -149,7 +149,7 @@ schemaTransactions
       >> Tx.sql ("CREATE SCHEMA IF NOT EXISTS \"" <> schemaName <> "\";")
       >> Tx.sql ("SET search_path TO " <> searchPathJoined <> ";")
     where
-      searchPathJoined = foldr' (\item res -> res <> "," <> item) "" searchPathList
+      searchPathJoined = foldMap identity (intersperse "," searchPathList)
 
 type InitAndRev = (MigrationArgs, MigrationArgs)
 
