@@ -129,7 +129,7 @@ executionScheme maybeSchemaOption register dbCo = do
   let prepareInitTransaction = migrationCommandToTransaction MigrationInitialization
   initAndRevListOfTransaction <- liftIO $ (sequence $ loadInitAndRevTransaction <$> (initRevList register))
   let initAndRevTransaction = sequence initAndRevListOfTransaction
-  seedTransactionList <- liftIO $ sequence <$> (sequence $ migrationArgsToTransaction <$> seedList register)
+  seedTransactionList <- liftIO $ sequence <$> (sequence $ seedToTransaction <$> seedList register)
   let allTransactions = initAndRevTransaction >> seedTransactionList
   let liftedTrans = sequence <$> allTransactions
   let schemaTransaction = Right <$> (fromMaybe mempty (schemaTransactions <$> maybeSchemaOption))
@@ -137,6 +137,20 @@ executionScheme maybeSchemaOption register dbCo = do
   restrictedErr <- liftIO $ runTx dbCo finalTransaction
   let final = join $ (first HasqlQueryError restrictedErr)
   const dbCo <$> (ExceptT $ pure final)
+
+-- | For seed transactions every 'ScriptChanged' is catched and the script is reexecuted.
+-- It would be interesting to handle this in an sql file comment.
+seedToTransaction :: MigrationArgs -> IO (Tx.Transaction (Either MigrationExecutionError ()))
+seedToTransaction arg = do
+  cmd <- loadMigrationArgs arg
+  let catchMigrationChanged input = case input of
+        Left (ScriptChanged _) -> case cmd of
+          MigrationScript name content -> pure ((
+              Right <$> (updateChecksum name content) 
+            ) >> Tx.sql content)
+          _ -> panic "Partial pattern match OK here because 'rawInitMigration' is built this way"
+        somethingElse -> somethingElse
+  pure (pure $ Right ())
 
 schemaTransactions :: DBSchemaOption -> Tx.Transaction ()
 schemaTransactions
