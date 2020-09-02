@@ -32,7 +32,8 @@ data MigrationPattern = MigrationPattern
     basePath :: !FilePath,
     dbSchemaOption :: !(Maybe DBSchemaOption),
     dependencyPrefixToAdd :: String, 
-    migrationOrder :: MigrationOrder
+    migrationOrder :: MigrationOrder,
+    debugMode :: Bool 
   }
 
 data MigrationOrder

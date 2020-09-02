@@ -37,6 +37,7 @@ dependencies:
 - text
 - tasty
 - tasty-hunit
+- pretty-simple
 
 library:
   source-dirs: src

@@ -3,7 +3,7 @@ module BuildMigrationRegister where
 import Utils ( dropPrefixFromName, getInitMigration, getMaybeInit, registerBuildingProcessingOrder) 
 import Protolude
 import MigrationTypes
-    ( TupleMigration(..),
+    (debugMode,  TupleMigration(..),
       MigrationRegister(initRevMap, seed, dependencyMap),
       MigrationPattern(migrationPatternList, basePath,
                        seedMigrationPrefix, revisionMigrationPrefix, initMigrationPrefix),
@@ -16,6 +16,7 @@ import qualified Data.Map as Map ( insert, updateLookupWithKey )
 import System.FilePath.Posix (splitFileName, (</>))
 import System.FilePattern.Directory (FilePattern, getDirectoryFiles)
 import Dependency ( addMigDependencies, recursivelyMergeDependencySet )
+import Text.Pretty.Simple (pPrint)
 
 data FileGatheringError
   = FileHasNoMigrationType FilePath
@@ -33,6 +34,7 @@ gatherAllMigrationFiles :: MigrationPattern -> IO ([FileGatheringError], Migrati
 gatherAllMigrationFiles mig = do
   filePathList <- getDirectoryFiles (basePath mig) (migrationPatternList mig)
   (migrationErrorList, migrationRegister) <- buildMigrationRegister mig filePathList
+  if (debugMode mig) then pPrint migrationRegister else pure () 
   pure (migrationErrorList, migrationRegister)
 
 buildMigrationRegister :: MigrationPattern -> [FilePath] -> IO ([FileGatheringError], MigrationRegister)

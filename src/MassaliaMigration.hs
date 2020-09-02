@@ -93,7 +93,8 @@ defaultMigrationPattern =
       basePath = "./",
       dependencyPrefixToAdd = "ddli_",
       dbSchemaOption = Nothing,
-      migrationOrder = SQLFirstLine
+      migrationOrder = SQLFirstLine,
+      debugMode = True
     }
 
 -- | A function to assemble, classify and order the migration files

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: dc9cc877ac2d2ccda1efaf37fb23dcd7e19a9ec08af45efcd7c8c441db4630d3
+-- hash: bff08e8c27279f22b4f2a5cd1b53a5c06539c51e19deae7da4d46d6096015896
 
 name:           massalia-migration
 version:        0.1.0.0
@@ -48,6 +48,7 @@ library
     , hasql-migration
     , hasql-transaction
     , hasql-url
+    , pretty-simple
     , protolude
     , tasty
     , tasty-hunit
@@ -77,6 +78,7 @@ test-suite massalia-migration-test
     , hasql-transaction
     , hasql-url
     , massalia-migration
+    , pretty-simple
     , protolude
     , tasty
     , tasty-hunit

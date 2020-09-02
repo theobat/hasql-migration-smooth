@@ -10,7 +10,7 @@
 import Protolude
 import Test.Tasty ( defaultMain, testGroup, TestTree )
 import Dependency (getDependencyFromMigrationArgs)
-import MigrationTypes (
+import MigrationTypes (debugMode, 
   MigrationOrderedRegister(MigrationOrderedRegister, initRevList, seedList), MigrationArgs(MigrationArgs),
   MigrationRegister(dependencyMap)
   )
@@ -22,6 +22,8 @@ import qualified Data.Set as Set
 
 main :: IO ()
 main = defaultMain tests
+
+testConfig = defaultMigrationPattern{debugMode=False}
 
 tests :: TestTree
 tests = testGroup
