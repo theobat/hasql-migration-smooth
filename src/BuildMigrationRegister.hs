@@ -34,7 +34,8 @@ gatherAllMigrationFiles :: MigrationPattern -> IO ([FileGatheringError], Migrati
 gatherAllMigrationFiles mig = do
   filePathList <- getDirectoryFiles (basePath mig) (migrationPatternList mig)
   (migrationErrorList, migrationRegister) <- buildMigrationRegister mig filePathList
-  if (debugMode mig) then pPrint migrationRegister else pure () 
+  if (debugMode mig) then (pPrint "dependencyMap = ") else pure () 
+  if (debugMode mig) then pPrint $ dependencyMap migrationRegister else pure () 
   pure (migrationErrorList, migrationRegister)
 
 buildMigrationRegister :: MigrationPattern -> [FilePath] -> IO ([FileGatheringError], MigrationRegister)

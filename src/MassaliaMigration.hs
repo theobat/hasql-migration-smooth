@@ -47,6 +47,7 @@ import MigrationTypes
       MigrationPattern(..),
       MigrationArgs(..) )
 import Dependency (orderMigrationRegister)
+import Text.Pretty.Simple (pPrint)
 
 data GlobalMigrationError
   = StepInitDBError InitDBConnectionError
@@ -118,8 +119,10 @@ findAndRunAllMigration migrationPattern databaseURL = do
 findAndOrderAllMigration ::
   MigrationPattern ->
   ExceptT [FileGatheringError] IO MigrationOrderedRegister
-findAndOrderAllMigration migrationPattern =
-  orderMigrationRegister migrationPattern <$> gatherFileFailOnError migrationPattern
+findAndOrderAllMigration migrationPattern = do
+  res <- orderMigrationRegister migrationPattern <$> gatherFileFailOnError migrationPattern
+  if (debugMode migrationPattern) then pPrint $ initRevList res else pure ()
+  pure res
 
 executionScheme ::
   Maybe DBSchemaOption ->
