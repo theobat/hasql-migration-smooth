@@ -68,12 +68,17 @@ compareDependency mapping modA modB = case (modA == modB, aDepOnB, bDepOnA) of
   (_, True, True) -> panic $ "Circular dependency between: " <> show modA <> " and " <> show modB
   (_, True, _) -> LT -- A is before B (A depends on B)
   (_, _, True) -> GT -- B is before A (B depends on A)
-  _ -> EQ
+  -- A simple 'EQ' in the default case is wrong, because this comparison needs a total order
+  -- which the mutual test for inclusion is not. TODO: prove that it's a total order (unlikely) or switch to a real one  
+  -- simple case: a dependency which is never mentioned by anyone.
+  _ -> compare (length depA) (length depB) -- a simple workaround for now.
   where
     aDepOnB = modA `Set.member` depB
     bDepOnA = modB `Set.member` depA
-    depA = fromMaybe mempty $ lookup modA mapping
-    depB = fromMaybe mempty $ lookup modB mapping
+    depA = getDependencySet modA
+    depB = getDependencySet modB
+    getDependencySet name = fromMaybe (panic ("no dependecy named " <> show name <> " exists in the migrations")) $ lookup name mapping
+
 nameComp :: HashMap ScriptName (Set ScriptName) -> MigrationArgs -> MigrationArgs -> Ordering
 nameComp mapping a b = compareDependency mapping (scriptName a) (scriptName b)
 
