@@ -147,15 +147,17 @@ executionScheme maybeSchemaOption register dbCo = do
 seedToTransaction :: MigrationArgs -> IO (Tx.Transaction (Either MigrationExecutionError ()))
 seedToTransaction arg = do
   cmd <- loadMigrationArgs arg
-  pure $ do 
-    rawRes <- migrationCommandToTransaction cmd
-    catchMigrationChanged input = case input of
-        Left (ScriptChanged _) -> case cmd of
-          MigrationScript name content -> pure ((
-              Right <$> (updateChecksum name content) 
+  pure $ handleTransaction cmd
+  where
+    handleTransaction transaction = do
+      rawRes <- migrationCommandToTransaction transaction
+      case rawRes of
+        Left (HasqlMigrationError (ScriptChanged _)) -> case transaction of
+          MigrationScript name content -> (const $ Right ()) <$> ((
+              (updateChecksum name content) 
             ) >> Tx.sql content)
           _ -> panic "Partial pattern match OK here because 'rawInitMigration' is built this way"
-        somethingElse -> somethingElse
+        somethingElse -> pure somethingElse
 
 schemaTransactions :: DBSchemaOption -> Tx.Transaction ()
 schemaTransactions
