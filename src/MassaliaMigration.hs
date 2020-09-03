@@ -147,14 +147,15 @@ executionScheme maybeSchemaOption register dbCo = do
 seedToTransaction :: MigrationArgs -> IO (Tx.Transaction (Either MigrationExecutionError ()))
 seedToTransaction arg = do
   cmd <- loadMigrationArgs arg
-  let catchMigrationChanged input = case input of
+  pure $ do 
+    rawRes <- migrationCommandToTransaction cmd
+    catchMigrationChanged input = case input of
         Left (ScriptChanged _) -> case cmd of
           MigrationScript name content -> pure ((
               Right <$> (updateChecksum name content) 
             ) >> Tx.sql content)
           _ -> panic "Partial pattern match OK here because 'rawInitMigration' is built this way"
         somethingElse -> somethingElse
-  pure (pure $ Right ())
 
 schemaTransactions :: DBSchemaOption -> Tx.Transaction ()
 schemaTransactions
