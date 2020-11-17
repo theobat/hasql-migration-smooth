@@ -17,7 +17,7 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: nightly-2020-08-25
+resolver: nightly-2020-11-17
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -35,9 +35,6 @@ packages:
 # forks / in-progress versions pinned to a git hash. For example:
 #
 extra-deps:
-  - hasql-dynamic-statements-0.2.0.2@sha256:b650a97171f8379b43d8f9b4182dfa607e4a3f8b944f55fdb41207c09425aebc,2675
-  - hasql-implicits-0.1.0.2@sha256:5d54e09cb779a209681b139fb3cc726bae75134557932156340cc0a56dd834a8,1361
-  - ptr-0.16.7.2@sha256:4a91e1342db8e627435a002798d65329a0c09c8632b2e415461b9928785327f9,2686
   - git: https://github.com/theobat/hasql-url.git
     commit: 77e2616d5d33dfaa58eb4d9b643dcf710c2e5745
   - git: https://github.com/theobat/hasql-migration.git

@@ -4,15 +4,15 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bff08e8c27279f22b4f2a5cd1b53a5c06539c51e19deae7da4d46d6096015896
+-- hash: eb93a15f00a84687002fde34c59b4671d1ffd7e172ab5cb81099a26a2804f285
 
 name:           massalia-migration
 version:        0.1.0.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/massalia-migration#readme>
-homepage:       https://github.com/githubuser/massalia-migration#readme
-bug-reports:    https://github.com/githubuser/massalia-migration/issues
+homepage:       https://github.com/theobat/massalia-migration#readme
+bug-reports:    https://github.com/theobat/massalia-migration/issues
 author:         Kanso
-maintainer:     tech@kanso.ink
+maintainer:     contact _ at _ kanso.ink
 copyright:      2020 Kanso
 license:        BSD3
 license-file:   LICENSE
@@ -23,7 +23,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/massalia-migration
+  location: https://github.com/theobat/massalia-migration
 
 library
   exposed-modules:
@@ -43,8 +43,6 @@ library
     , filepath
     , filepattern
     , hasql
-    , hasql-dynamic-statements
-    , hasql-implicits
     , hasql-migration
     , hasql-transaction
     , hasql-url
@@ -72,8 +70,6 @@ test-suite massalia-migration-test
     , filepath
     , filepattern
     , hasql
-    , hasql-dynamic-statements
-    , hasql-implicits
     , hasql-migration
     , hasql-transaction
     , hasql-url

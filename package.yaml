@@ -1,9 +1,9 @@
 name:                massalia-migration
 version:             0.1.0.0
-github:              "githubuser/massalia-migration"
+github:              "theobat/massalia-migration"
 license:             BSD3
 author:              "Kanso"
-maintainer:          "tech@kanso.ink"
+maintainer:          "contact _ at _ kanso.ink"
 copyright:           "2020 Kanso"
 
 extra-source-files:
@@ -23,8 +23,6 @@ dependencies:
 - base >= 4.7 && < 5
 - protolude
 - hasql
-- hasql-dynamic-statements
-- hasql-implicits
 - hasql-migration
 - hasql-transaction
 - hasql-url
