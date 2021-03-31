@@ -114,6 +114,18 @@ findAndRunAllMigration migrationPattern databaseURL = do
     connectionAttempt = ExceptT $ connectionFromURL databaseURL
     withStepError errConstructor = withExceptT (pure . errConstructor)
 
+findAndRunAllMigrationWithConnection :: 
+  MigrationPattern ->
+  Connection ->
+  ExceptT [GlobalMigrationError] IO ()
+findAndRunAllMigrationWithConnection migrationPattern connection = do
+  orderedMigrationRegister <- withExceptT (StepFileGatheringError <$>) gatherAndOrderFile
+  finalRes <- withStepError StepFileExecutionError $ executionScheme (dbSchemaOption migrationPattern) orderedMigrationRegister connection
+  liftIO $ Connection.release finalRes
+  where
+    gatherAndOrderFile = findAndOrderAllMigration migrationPattern
+    withStepError errConstructor = withExceptT (pure . errConstructor)
+
 -- | A function to assemble, classify and return the migration files
 -- in the form of a migration register ('MigrationOrderedRegister').
 findAndOrderAllMigration ::
